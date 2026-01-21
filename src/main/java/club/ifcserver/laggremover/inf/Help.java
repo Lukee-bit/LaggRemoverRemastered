@@ -1,11 +1,12 @@
 package club.ifcserver.laggremover.inf;
 
-import club.ifcserver.laggremover.api.proto.LRProtocolResult;
-import club.ifcserver.laggremover.main.LaggRemover;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.ChatColor;
+
 import org.bukkit.entity.Player;
+
+import club.ifcserver.laggremover.api.proto.LRProtocolResult;
+import club.ifcserver.laggremover.main.LaggRemover;
 
 /* loaded from: LaggRemover-2.0.6.jar:drew6017/lr/inf/Help.class */
 public class Help {
@@ -13,9 +14,11 @@ public class Help {
 
     public static void init() {
         commandsHelp.add("§e /lr help(h) <num>:§7 Lists all available commands.");
-        commandsHelp.add("§e /lr master(m) <world:none>:§7 Displays a lot of information about the world and server you are in.");
+        commandsHelp.add(
+                "§e /lr master(m) <world:none>:§7 Displays a lot of information about the world and server you are in.");
         commandsHelp.add("§e /lr tps:§7 Displays the servers TPS.");
-        commandsHelp.add("§e /lr gc:§7 Frees up RAM on your server by removing unnecessary objects stored by the system.");
+        commandsHelp
+                .add("§e /lr gc:§7 Frees up RAM on your server by removing unnecessary objects stored by the system.");
         commandsHelp.add("§e /lr ram:§7 Lists data about current RAM usage.");
         commandsHelp.add("§e /lr protocol(pr) <options>:§7 Allows for the manual viewing/running/etc of protocols.");
         commandsHelp.add("§e /lr clear(c):§7 Removes various entities/items.");
@@ -34,7 +37,8 @@ public class Help {
             sendMsg(p, "§cHelp page #" + pageNum + " does not exist.", true);
             return;
         }
-        sendMsg(p, "§3---------========== Help Page (§b" + pageNum + "§3/§b" + Integer.toString(maxPages) + "§3) ==========---------", false);
+        sendMsg(p, "§3---------========== Help Page (§b" + pageNum + "§3/§b" + Integer.toString(maxPages)
+                + "§3) ==========---------", false);
         for (String s : pages.get(pageNum - 1)) {
             sendMsg(p, s, false);
         }
@@ -42,7 +46,7 @@ public class Help {
 
     public static void sendMsg(Player p, String msg, boolean pre) {
         if (p == null) {
-            LaggRemover.instance.getLogger().info(ChatColor.stripColor(msg));
+            LaggRemover.instance.getLogger().info(msg.replaceAll("§.", ""));
             return;
         }
         if (pre) {
@@ -72,7 +76,6 @@ public class Help {
     }
 
     public static void sendProtocolResultInfo(Player p, LRProtocolResult r) {
-        Object[] data;
         StringBuilder s = new StringBuilder();
         s.append("{");
         int i = 0;
@@ -81,6 +84,6 @@ public class Help {
             i++;
         }
         String fin = s.toString();
-        sendMsg(p, "§eProtocol: " + r.getSuper().id() + " | §7" + (s.substring(0, fin.length() - 2) + "}"), true);
+        sendMsg(p, "§eProtocol: " + r.getSuper().id() + " | §7" + (fin.substring(0, fin.length() - 2) + "}"), true);
     }
 }

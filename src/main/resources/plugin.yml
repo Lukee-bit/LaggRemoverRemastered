@@ -1,7 +1,7 @@
 name: LaggRemover
-version: '${version}'
+version: "${version}"
 main: club.ifcserver.laggremover.main.LaggRemover
-api-version: 1.19
+api-version: 1.20
 folia-supported: true
 
 commands:

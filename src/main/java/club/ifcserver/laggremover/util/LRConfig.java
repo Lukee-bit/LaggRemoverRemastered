@@ -1,16 +1,16 @@
 package club.ifcserver.laggremover.util;
 
-import club.ifcserver.laggremover.api.aparser.AnfoParser;
-import club.ifcserver.laggremover.api.proto.LRProtocol;
-import club.ifcserver.laggremover.api.proto.Protocol;
-import club.ifcserver.laggremover.main.LaggRemover;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -18,6 +18,11 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.json.simple.parser.ParseException;
+
+import club.ifcserver.laggremover.api.aparser.AnfoParser;
+import club.ifcserver.laggremover.api.proto.LRProtocol;
+import club.ifcserver.laggremover.api.proto.Protocol;
+import club.ifcserver.laggremover.main.LaggRemover;
 
 public class LRConfig {
     public static double lagConstant;
@@ -120,19 +125,25 @@ public class LRConfig {
             LaggRemover.instance.saveDefaultConfig();
         }
         if (DrewMath.intFrom(Objects.requireNonNull(LaggRemover.instance.getConfig().getString("version"))) < 16) {
-            LaggRemover.instance.getLogger().info("The saved version is not compatible with this version of LaggRemover and could not be updated by the automatic configuration updater. LaggRemover will back up the current configuration and generate a new one for you. Please manually copy over any old settings.");
+            LaggRemover.instance.getLogger().info(
+                    "The saved version is not compatible with this version of LaggRemover and could not be updated by the automatic configuration updater. LaggRemover will back up the current configuration and generate a new one for you. Please manually copy over any old settings.");
             try {
-                FileWriter w = new FileWriter(new File(LaggRemover.instance.getDataFolder(), "config(backup-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(Calendar.getInstance().getTime()) + ").yml"));
+                FileWriter w = new FileWriter(new File(LaggRemover.instance.getDataFolder(),
+                        "config(backup-"
+                                + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(Calendar.getInstance().getTime())
+                                + ").yml"));
                 w.write(new String(Files.readAllBytes(config.toPath())));
                 w.flush();
                 w.close();
             } catch (IOException e) {
-                LaggRemover.instance.getLogger().info("An error occurred when backing up the old configuration (" + e.getMessage() + ").");
+                LaggRemover.instance.getLogger()
+                        .info("An error occurred when backing up the old configuration (" + e.getMessage() + ").");
             }
             if (config.delete()) {
                 LaggRemover.instance.saveDefaultConfig();
             } else {
-                LaggRemover.instance.getLogger().info("Could not delete old configuration. Please delete it manually and restart your server to prevent imminent errors.");
+                LaggRemover.instance.getLogger().info(
+                        "Could not delete old configuration. Please delete it manually and restart your server to prevent imminent errors.");
             }
         }
         check(LaggRemover.CONFIG_VERSION);
@@ -182,6 +193,8 @@ public class LRConfig {
     }
 
     private static String stringFromInputStream(InputStream in) {
-        return new Scanner(in).useDelimiter("\\A").next();
+        try (Scanner scanner = new Scanner(in).useDelimiter("\\A")) {
+            return scanner.hasNext() ? scanner.next() : "";
+        }
     }
 }
