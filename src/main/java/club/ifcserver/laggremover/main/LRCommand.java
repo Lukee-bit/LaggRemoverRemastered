@@ -24,6 +24,7 @@ import club.ifcserver.laggremover.proto.bin.LRGC;
 import club.ifcserver.laggremover.util.BitString;
 import club.ifcserver.laggremover.util.DoubleVar;
 import club.ifcserver.laggremover.util.DrewMath;
+import club.ifcserver.laggremover.util.LRConfig;
 
 /* loaded from: LaggRemover-2.0.6.jar:drew6017/lr/main/LRCommand.class */
 public class LRCommand {
@@ -479,6 +480,21 @@ public class LRCommand {
                 Help.sendMsg(p, "§cCorrect usage: /lr " + (isCount ? "count(ct)" : "clear(c)")
                         + " [items(i):entities(e):type(t)] <options>", true);
                 return true;
+            }
+            noPerm(p);
+            return true;
+        } else if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
+            if (hasPerm(p, "lr.reload")) {
+                try {
+                    LRConfig.reload();
+                    Help.sendMsg(p, "§a✓ LaggRemover configuration has been reloaded successfully!", true);
+                    return true;
+                } catch (Exception e) {
+                    Help.sendMsg(p, "§c✗ Error reloading configuration: " + e.getMessage(), true);
+                    LaggRemover.instance.getLogger().severe("Error reloading configuration: " + e.getMessage());
+                    e.printStackTrace();
+                    return true;
+                }
             }
             noPerm(p);
             return true;
